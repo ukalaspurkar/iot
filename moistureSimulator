@@ -1,0 +1,61 @@
+# program to simulate some data on AWS IOT
+# Make sure you have "AWSIoTPythonSDK" installed before runing this script.
+from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
+import random, time
+
+
+# replace with the right certificates from  AWS IOT
+SHADOW_CLIENT = "raspShadowClient"
+HOST_NAME = "##########"
+ROOT_CA = "#########"
+PRIVATE_KEY = "#########"
+CERT_FILE = "#########"
+SHADOW_HANDLER = "MyRPi"
+
+def myShadowUpdateCallback(payload, responseStatus, token):
+  print()
+  print('UPDATE: $aws/things/' + SHADOW_HANDLER +
+    '/shadow/update/#')
+  print("payload = " + payload)
+  print("responseStatus = " + responseStatus)
+  print("token = " + token)
+
+# Create, configure, and connect a shadow client.
+raspShadowClient = AWSIoTMQTTShadowClient(SHADOW_CLIENT)
+raspShadowClient.configureEndpoint(HOST_NAME, 8883)
+raspShadowClient.configureCredentials(ROOT_CA, PRIVATE_KEY,
+  CERT_FILE)
+raspShadowClient.configureConnectDisconnectTimeout(10)
+raspShadowClient.configureMQTTOperationTimeout(5)
+raspShadowClient.connect()
+
+# Create a programmatic representation of the shadow.
+myDeviceShadow = raspShadowClient.createShadowHandlerWithName(
+  SHADOW_HANDLER, True)
+
+# Keep generating random test data until this script
+# stops running.
+# To stop running this script, press Ctrl+C.
+
+# sense = SenseHat()
+#sense.clear()
+
+while True:
+  # Generate random True or False test data to represent
+  # okay or low moisture levels, respectively.
+
+  print("--------------------------")
+  moisture = random.choice([True, False])
+  #print(moisture)
+  if moisture:
+    myDeviceShadow.shadowUpdate(
+      '{"state":{"reported":{"moisture":"okay"}}}',
+      myShadowUpdateCallback, 5)
+  else:
+    myDeviceShadow.shadowUpdate(
+      '{"state":{"reported":{"moisture":"low"}}}',
+      myShadowUpdateCallback, 5)
+
+  # Wait for this test value to be added.
+  # sleep 60 seconds
+  time.sleep(60)
