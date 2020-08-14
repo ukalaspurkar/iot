@@ -34,12 +34,8 @@ raspShadowClient.connect()
 myDeviceShadow = raspShadowClient.createShadowHandlerWithName(
   SHADOW_HANDLER, True)
 
-# Keep generating random test data until this script
-# stops running.
+# Keep generating random test data until this scrip stops running.
 # To stop running this script, press Ctrl+C.
-
-# sense = SenseHat()
-#sense.clear()
 
 while True:
   # Generate random True or False test data to represent
