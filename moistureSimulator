@@ -1,3 +1,4 @@
+# Generated from IOT demo series here: https://www.youtube.com/watch?v=RJ1R0cLx0Fs
 # program to simulate some data on AWS IOT
 # Make sure you have "AWSIoTPythonSDK" installed before runing this script.
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
